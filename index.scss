@@ -1,18 +1,25 @@
 /* variables, and mixins */
 :root {
   --primary: #fff;
-  --secondary: #eee;
-  --green: #ccc;
-  --red: #ccc;
-  --accent: #ccc;
+  --secondary: #ddd;
+  --base: #ccc;
+  --green: #17e217;
+  --red: #fb0303;
+  --accent: #eee;
 }
 @mixin neumorphism-box-shadow {
-  box-shadow: -12px 12px 12px 0 rgba($color: #fff, $alpha: 1),
+  box-shadow: -12px -12px 12px 0 rgba($color: #fff, $alpha: 0.8),
     12px 12px 12px 0 rgba($color: #000, $alpha: 0.2);
+  border-radius: 5px;
+}
+@mixin neumorphism-box-shadow-inner {
+  box-shadow: -6px -6px 6px 0 rgba($color: #fff, $alpha: 0.7),
+    6px 6px 6px 0 rgba($color: #000, $alpha: 0.2);
+  border-radius: 8px;
 }
 
 /* reset */
-bpdy,
+body,
 p,
 a,
 ul,
@@ -21,15 +28,57 @@ li {
   padding: 0;
   text-decoration: none;
 }
-
 li {
   list-style-type: none;
+}
+h1,
+h2,
+h3 {
+  margin: 0;
+}
+.App {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
 }
 
 /* fonts */
 body {
   font-family: "Rubik", sans-serif;
-  /* font-family: 'Orbitron', sans-serif; */
+}
+h1 {
+  font-size: 1.2em;
+}
+footer p {
+  font-size: 0.8em;
+}
+.settings div {
+  font-size: 0.8em;
+}
+.count,
+#time-left {
+  font-family: "Orbitron", sans-serif;
+}
+#time-left {
+  font-size: 2.5em;
+}
+.button-action span {
+  font-size: 1.7em;
+}
+#break-increment .btn,
+#length-increment .btn {
+  color: var(--green);
+}
+#break-decrement .btn,
+#length-decrement .btn {
+  color: var(--red);
+}
+#reset span {
+  color: #ff9a00;
+  font-weight: 700;
+}
+#start_stop span {
+  color: #4a97f9;
 }
 
 /* base styles */
@@ -49,19 +98,152 @@ button {
   grid-template-columns: repeat(8, 1fr);
   gap: 10px;
 }
-
-.nav-site{
+.site-nav {
   margin: 0 20px;
+  height: 10vh;
+}
+.site-nav h1 {
+  grid-column: span 8;
+  justify-self: center;
+  align-self: center;
+  @include neumorphism-box-shadow-inner();
+  padding: 10px;
+  background: var(--primary);
+}
+.main {
+  height: 74vh;
+  margin: 3vh auto;
+}
+.pomodoro {
+  grid-column: 2/8;
+  grid-row: 1/10;
+  padding: 10px;
+  background: var(--accent);
+  display: flex;
+  max-width: 400px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  @include neumorphism-box-shadow();
+}
+.pomodoro h2 {
+  padding: 5px 10px;
+  background: var(--primary);
+  @include neumorphism-box-shadow-inner();
+}
+.settings {
+  width: 100%;
+  @extend .grid;
+}
+.settings > section {
+  justify-self: center;
+  padding: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--primary);
+  grid-column: 2/8;
+  @include neumorphism-box-shadow-inner();
+}
+.settings > section:nth-child(1) {
+  grid-row: 1;
+}
+.settings > section:nth-child(2) {
+  grid-row: 2;
+}
+#break-length,
+#session-length {
+  text-align: center;
+}
+.actions {
+  margin-top: 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
+.button-action {
+  width: 25px;
+  height: 25px;
+  text-align: center;
+  box-shadow: -3px -3px 3px 0 rgba(255, 255, 255, 0.7),
+    3px 3px 3px 0 rgba(0, 0, 0, 0.2);
+  outline: none;
+  border: none;
+  border-radius: 3px;
+  background: #fdfdfd;
+}
+.session-details {
+  padding: 10px;
+  width: 80%;
+  box-sizing: border-box;
+  background: var(--primary);
+  @include neumorphism-box-shadow-inner();
+  border-radius: 20px;
+}
+#timer-label,
+#time-left {
+  text-align: center;
+}
+#start_stop,
+#reset {
+  height: 40px;
+  width: 40px;
+  background: var(--primary);
+}
+#start_stop {
+  grid-column: 3/5;
+}
+#reset {
+  grid-column: 5/7;
+}
+.message {
+  grid-column: span 8;
+  grid-row: 10/11;
+  justify-self: center;
+  align-self: center;
+}
+footer {
+  margin: 0 20px;
+  height: 10vh;
+}
+footer p {
+  grid-column: 1/4;
+}
+footer ul {
+  grid-column: 4/9;
+  display: flex;
+  justify-content: flex-end;
+}
+footer li {
+  padding-left: 10px;
 }
 
 /* tablet styles */
 @media screen and (min-width: 520px) {
+  .pomodoro {
+    justify-self: center;
+    min-width: 400px;
+    max-height: 600px;
+  }
 }
 
 /* laptop styles */
 @media screen and (min-width: 960px) {
   body {
     font-size: 18px;
+  }
+  .pomodoro {
+    justify-self: center;
+    min-width: 400px;
+    max-height: 600px;
+  }
+  .settings > section:nth-child(1) {
+    grid-column: 1/5;
+    grid-row: 1;
+  }
+  .settings > section:nth-child(2) {
+    grid-column: 5/9;
+    grid-row: 1;
   }
 }
 
