@@ -1,0 +1,73 @@
+/* variables, and mixins */
+:root {
+  --primary: #fff;
+  --secondary: #eee;
+  --green: #ccc;
+  --red: #ccc;
+  --accent: #ccc;
+}
+@mixin neumorphism-box-shadow {
+  box-shadow: -12px 12px 12px 0 rgba($color: #fff, $alpha: 1),
+    12px 12px 12px 0 rgba($color: #000, $alpha: 0.2);
+}
+
+/* reset */
+bpdy,
+p,
+a,
+ul,
+li {
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+}
+
+li {
+  list-style-type: none;
+}
+
+/* fonts */
+body {
+  font-family: "Rubik", sans-serif;
+  /* font-family: 'Orbitron', sans-serif; */
+}
+
+/* base styles */
+body {
+  font-size: 16px;
+  overflow-x: hidden;
+  background: var(--secondary);
+}
+button {
+  background: none;
+  outline: none;
+}
+
+/* mobile styles */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 10px;
+}
+
+.nav-site{
+  margin: 0 20px;
+}
+
+/* tablet styles */
+@media screen and (min-width: 520px) {
+}
+
+/* laptop styles */
+@media screen and (min-width: 960px) {
+  body {
+    font-size: 18px;
+  }
+}
+
+/* dekstop styles */
+@media screen and (min-width: 960px) {
+  body {
+    font-size: 20px;
+  }
+}
