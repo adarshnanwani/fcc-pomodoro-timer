@@ -5,34 +5,79 @@ class Pomodoro extends Component {
     breakLength: 5,
     sessionLength: 25,
     isTimerActive: false,
-    isTimerPaused: false
+    isTimerPaused: false,
+    totalSeconds: 25 * 60,
+    showPlay: true,
+    isBreak: false
   };
+
+  timer;
 
   resetTimer = () => {
     this.setState({
       breakLength: 5,
       sessionLength: 25,
       isTimerActive: false,
-      isTimerPaused: false
+      isTimerPaused: false,
+      totalSeconds: 25 * 60,
+      showPlay: true,
+      isBreak: false
     });
+    clearInterval(this.timer);
   };
 
   toggleTimer = () => {
     if (!this.state.isTimerActive && !this.state.isTimerPaused) {
       // Start the timer
+      this.timer = setInterval(this.countdown, 1000);
       this.setState({
-        isTimerActive: true
+        isTimerActive: true,
+        showPlay: false
       });
     } else if (this.state.isTimerActive && !this.state.isTimerPaused) {
       // Pause the timer
       this.setState({
-        isTimerPaused: true
+        isTimerPaused: true,
+        showPlay: true
       });
     } else {
       // Unpause the timer
+      if (typeof this.timer !== "undefined" && this.state.totalSeconds > 0) {
+        this.setState({
+          isTimerPaused: false,
+          showPlay: false
+        });
+      }
+    }
+  };
+
+  startTimer = () => {
+    this.timer = setInterval(this.countdown, 1000);
+  };
+
+  countdown = () => {
+    let seconds = this.state.totalSeconds - 1;
+    if (!this.state.isTimerPaused) {
       this.setState({
-        isTimerPaused: false
+        totalSeconds: seconds
       });
+    }
+    if (seconds < 0 && this.state.isBreak === false) {
+      clearInterval(this.timer);
+      this.setState({
+        totalSeconds: this.state.breakLength * 60,
+        isBreak: true
+      });
+      // this.timer = setInterval(this.countdown, 1000);
+      this.startTimer();
+    } else if (seconds < 0 && this.state.isBreak === true) {
+      clearInterval(this.timer);
+      this.setState({
+        totalSeconds: this.state.sessionLength * 60,
+        isBreak: false
+      });
+      this.startTimer();
+      //this.timer = setInterval(this.countdown, 1000);
     }
   };
 
@@ -41,8 +86,10 @@ class Pomodoro extends Component {
       this.setState(prevState => {
         let newSess = prevState.sessionLength + num;
         if (newSess <= 0) newSess = 1;
+        if (newSess > 60) newSess = 60;
         return {
-          sessionLength: newSess
+          sessionLength: newSess,
+          totalSeconds: newSess * 60
         };
       });
     }
@@ -53,6 +100,7 @@ class Pomodoro extends Component {
       this.setState(prevState => {
         let newBreak = prevState.breakLength + num;
         if (newBreak <= 0) newBreak = 1;
+        if (newBreak > 60) newBreak = 60;
         return {
           breakLength: newBreak
         };
@@ -61,12 +109,17 @@ class Pomodoro extends Component {
   };
 
   render() {
+    const totalSeconds = this.state.totalSeconds;
+    let hours = Math.floor(totalSeconds / 60);
+    if (hours < 10) hours = "0" + hours;
+    let seconds = totalSeconds % 60;
+    if (seconds < 10) seconds = "0" + seconds;
     return (
       <section className="pomodoro">
         <h2>Pomodoro Clock</h2>
         <section className="settings">
           <section>
-            <div id="break-length-container">Break Length</div>
+            <div id="break-label">Break Length</div>
             <section className="actions">
               <button
                 className="button-action"
@@ -88,11 +141,11 @@ class Pomodoro extends Component {
             </section>
           </section>
           <section>
-            <div id="session-length-container">Session Length</div>
+            <div id="session-label">Session Length</div>
             <section className="actions">
               <button
                 className="button-action"
-                id="length-decrement"
+                id="session-decrement"
                 onClick={() => this.updateSessionLength(-1)}
               >
                 <span className="btn">&#8722;</span>
@@ -102,7 +155,7 @@ class Pomodoro extends Component {
               </span>
               <button
                 className="button-action"
-                id="length-increment"
+                id="session-increment"
                 onClick={() => this.updateSessionLength(1)}
               >
                 <span className="btn">&#43;</span>
@@ -111,8 +164,10 @@ class Pomodoro extends Component {
           </section>
         </section>
         <section className="session-details">
-          <div id="timer-label">Session</div>
-          <section id="time-left">25:00</section>
+          <div id="timer-label">{this.state.isBreak ? "Break" : "Session"}</div>
+          <section id="time-left">
+            {hours}:{seconds}
+          </section>
         </section>
         <section className="grid">
           <button
@@ -120,11 +175,7 @@ class Pomodoro extends Component {
             id="start_stop"
             onClick={this.toggleTimer}
           >
-            {this.state.isTimerPaused ? (
-              <span>&#8214;</span>
-            ) : (
-              <span>&#9654;</span>
-            )}
+            {this.state.showPlay ? <span>&#9654;</span> : <span>&#8214;</span>}
           </button>
           <button
             className="button-action"
