@@ -6,7 +6,7 @@ const Main = () => {
     <section className="main grid">
       <Pomodoro />
       <p className="message">
-        Build with <span style={{ color: "red" }}>&#10084;</span> by Ady
+        Built with <span style={{ color: "red" }}>&#10084;</span> by Ady
       </p>
     </section>
   );

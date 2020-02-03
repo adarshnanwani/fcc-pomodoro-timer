@@ -8,10 +8,18 @@ class Pomodoro extends Component {
     isTimerPaused: false,
     totalSeconds: 25 * 60,
     showPlay: true,
-    isBreak: false
+    isBreak: false,
+    isPlaying: false
   };
 
   timer;
+
+  componentDidUpdate() {
+    if(this.state.totalSeconds === 0){
+      this.audio.currentTime = 0;
+      this.audio.play();
+    }
+  }
 
   resetTimer = () => {
     this.setState({
@@ -21,9 +29,12 @@ class Pomodoro extends Component {
       isTimerPaused: false,
       totalSeconds: 25 * 60,
       showPlay: true,
-      isBreak: false
+      isBreak: false,
+      isPlaying: false
     });
     clearInterval(this.timer);
+    this.audio.pause();
+    this.audio.currentTime = 0;
   };
 
   toggleTimer = () => {
@@ -183,6 +194,12 @@ class Pomodoro extends Component {
             onClick={this.resetTimer}
           >
             <span>&#8635;</span>
+            <audio
+              src="https://goo.gl/65cBl1"
+              id="beep"
+              preload="auto"
+              ref={audio => (this.audio = audio)}
+            />
           </button>
         </section>
       </section>
